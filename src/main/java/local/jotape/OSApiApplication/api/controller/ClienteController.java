@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.Optional;
 import local.jotape.OSApiApplication.domain.model.Cliente;
 import local.jotape.OSApiApplication.domain.repository.ClienteRepository;
+import local.jotape.OSApiApplication.domain.service.ClienteService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -30,15 +31,14 @@ public class ClienteController {
     @Autowired
     private ClienteRepository clienteRepository;
     
-    @PersistenceContext
-    private EntityManager manager;
+    @Autowired
+    private ClienteService clienteService;
     
     @GetMapping("/clientes")
     public List<Cliente> listas() {
-        
-        //Linguagem JPQL (tipo SQL só que em Jakarta)
-        return manager.createQuery("from Cliente", Cliente.class)
-                .getResultList();
+        return clienteRepository.findAll();
+        //return clienteRepository.findByNome("Jp")
+        //return clienteRepository.findByNomeContaining("Maciel
     }
     
     
@@ -59,7 +59,7 @@ public class ClienteController {
     @ResponseStatus(HttpStatus.CREATED)
     public Cliente adicionar(@RequestBody Cliente cliente) {
         
-        return clienteRepository.save(cliente);
+        return clienteService.salvar(cliente);
         
     }
     
@@ -72,7 +72,7 @@ public class ClienteController {
         }
         
         cliente.setId(clienteID);
-        cliente = clienteRepository.save(cliente);
+        cliente = clienteService.salvar(cliente);
         return ResponseEntity.ok(cliente);
                 
     }
@@ -85,7 +85,7 @@ public class ClienteController {
             return ResponseEntity.notFound().build();
         }
         
-        clienteRepository.deleteById(clienteID);
+        clienteService.excluir(clienteID);
         return ResponseEntity.noContent().build();
         }
     }
