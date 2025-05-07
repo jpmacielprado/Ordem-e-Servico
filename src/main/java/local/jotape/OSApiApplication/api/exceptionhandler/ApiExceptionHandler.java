@@ -43,7 +43,7 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
         
         problema.setCampos(camposComErro);
         
-        return super.handleMethodArgumentNotValid(ex, headers, status, request);
+        return super.handleExceptionInternal(ex, problema, headers, status, request);
     }
     
     @ExceptionHandler(DomainException.class)
@@ -57,4 +57,5 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
         return handleExceptionInternal(ex, problema, new HttpHeaders(), status, request);
     }
     
+
 }
